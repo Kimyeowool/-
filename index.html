@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>랜덤 명언 페이지</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: white;
+      background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      backdrop-filter: blur(2px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 30px;
+    }
+
+    #quote-box {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 700px;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    #quote {
+      font-size: 1.8em;
+      min-height: 80px;
+      white-space: pre-line;
+    }
+
+    #author {
+      margin-top: 15px;
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 25px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    /* 숨겨진 오디오 컨트롤 */
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🎵 배경음악 -->
+  <audio id="bg-music" autoplay loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/29/audio_fa4a52ac65.mp3" type="audio/mpeg">
+    오디오를 지원하지 않는 브라우저입니다.
+  </audio>
+
+  <!-- 📜 명언 박스 -->
+  <div id="quote-box">
+    <div id="quote">"명언이 여기에 표시됩니다."</div>
+    <div id="author">— 작가 이름</div>
+  </div>
+
+  <!-- 🔁 버튼 -->
+  <button onclick="handleButtonClick()">🔁 새로운 명언 보기</button>
+
+  <script>
+    const quotes = [
+      { quote: "성공은 준비와 기회의 만남이다.", author: "세네카" },
+      { quote: "포기하지 마라. 큰일은 작은 일을 모아서 이루어진다.", author: "공자" },
+      { quote: "당신이 할 수 있다고 믿든, 없다고 믿든, 믿는 대로 된다.", author: "헨리 포드" },
+      { quote: "삶이 있는 한 희망은 있다.", author: "키케로" },
+      { quote: "가장 어두운 밤도 끝나고 해는 뜬다.", author: "빅토르 위고" }
+    ];
+
+    function typeWriter(text, elementId, speed = 50, callback) {
+      const element = document.getElementById(elementId);
+      element.textContent = '';
+      let i = 0;
+
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        } else if (callback) {
+          callback();
+        }
+      }
+
+      type();
+    }
+
+    function showRandomQuote() {
+      const random = Math.floor(Math.random() * quotes.length);
+      const quoteText = `"${quotes[random].quote}"`;
+      const authorText = `— ${quotes[random].author}`;
+
+      typeWriter(quoteText, 'quote', 50, () => {
+        document.getElementById('author').textContent = authorText;
+      });
+    }
+
+    function handleButtonClick() {
+      const music = document.getElementById('bg-music');
+      if (music.paused) {
+        music.play().catch(e => {
+          console.log("오디오 자동재생이 차단되었어요 😢");
+        });
+      }
+      showRandomQuote();
+    }
+
+    // 페이지 처음 로드 시 명언 보여줌
+    window.onload = showRandomQuote;
+  </script>
+
+</body>
+</html>
